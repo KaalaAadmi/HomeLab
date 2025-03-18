@@ -1,0 +1,38 @@
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+     - '1234:3000'
+    user: '1000'
+    volumes:
+      # - /home/kaalu/volumes/grafana/grafana-storage:/var/lib/grafana
+      - /home/kaalu/volumes/grafana/grafana-storage:/var/lib/grafana
+    environment:
+      # - GF_LOG_LEVEL=debug
+      # - GF_PLUGINS_PREINSTALL=grafana-clock-panel, grafana-simple-json-datasource
+      GF_LOG_LEVEL: debug
+      GF_SERVER_ROOT_URL: "https://grafana.arnavbhattacharya.com"
+      GF_AUTH_GENERIC_OAUTH_ENABLED: "true"
+      GF_AUTH_GENERIC_OAUTH_NAME: "authentik"
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: "RQXt7X3Xxo6A0hWVxOcg4oekFKDOhTYWkJQL8Cyd"
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: "u9uf6TTOBUIYmb0pD7rtzNowgXvAS3BNZuBp9gI4xDgFpMEGhIa3YZT36fZoLmjLVizJJRwN8YJ4x5xUjVhwvZaObDhYVEtVGmNRK6hxaEqtQywkzuDjkN7J6jti9ZLl"
+      GF_AUTH_GENERIC_OAUTH_SCOPES: "openid profile email"
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: "https://authentik.arnavbhattacharya.com/application/o/authorize/"
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: "https://authentik.arnavbhattacharya.com/application/o/token/"
+      GF_AUTH_GENERIC_OAUTH_API_URL: "https://authentik.arnavbhattacharya.com/application/o/userinfo/"
+      GF_AUTH_SIGNOUT_REDIRECT_URL: "https://authentik.arnavbhattacharya.com/application/o/grafana/end-session/"
+      # Optionally enable auto-login (bypasses Grafana login screen)
+      # GF_AUTH_OAUTH_AUTO_LOGIN: "true"
+      # Optionally map user groups to Grafana roles
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups, 'Grafana Admins') && 'Admin'"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+      
+volumes:
+  grafana-storage: 

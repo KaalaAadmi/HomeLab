@@ -1,0 +1,12 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token eyJhIjoiMWU3YmU4OWU2NjBkYzc0NThlMzQ4ODY0MTI2NGQ4YzMiLCJ0IjoiNzc4MzI1ZjEtMDI3NS00OWI5LTkwNDUtY2UxY2NmN2JjMzliIiwicyI6IlpEaGlZemRsTVRFdFlUQTRZeTAwTXprMkxUZ3lZMll0WWpCaVptRmtPV0k1TXpFMSJ9
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

@@ -1,0 +1,23 @@
+# compose.yaml
+services:
+  influxdb2:
+    image: influxdb:2
+    ports:
+      - ${DOCKER_INFLUXDB_INIT_PORT}:${DOCKER_INFLUXDB_INIT_PORT}
+    env_file:
+      - .env
+    entrypoint: ["./entrypoint.sh"]
+    volumes:
+      - ${DOCKER_INFLUXDB_DATA_VOLUME}:/var/lib/influxdb2
+      - ${DOCKER_INFLUXDB_CONFIG_VOLUME}:/etc/influxdb2
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+    
+volumes:
+  influxdb2-data:
+  influxdb2-config:

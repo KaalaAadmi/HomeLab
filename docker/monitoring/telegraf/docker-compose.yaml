@@ -1,0 +1,17 @@
+services:
+  telegraf:
+      image: docker.io/telegraf:latest
+      container_name: telegraf
+      user: telegraf:988
+      volumes:
+        - ${TELEGRAF_CFG_PATH}:/etc/telegraf/telegraf.conf:rw
+        - /var/run/docker.sock:/var/run/docker.sock
+      env_file:
+        - .env
+      networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+      

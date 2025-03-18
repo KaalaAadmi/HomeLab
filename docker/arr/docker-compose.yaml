@@ -1,0 +1,245 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    # Hostname to use for container, required in some instances for the rest of the stack to each other endpoints 
+    hostname: gluetun
+    # line above must be uncommented to allow external containers to connect.
+    # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 6881:6881 # qbittorrent
+      - 6881:6881/udp # qbittorrent
+      - 8080:8080 # qbittorrent
+      - 9696:9696 # Prowlarr
+      # - 4545:4545 # Requesterr
+      - 5055:5055 # Overseerr
+      # - 8191:8191 # Flaresolverr
+      - 8686:8686 # Lidarr
+      - 8090:8090 # Mylar3
+      - 6767:6767 # Bazarr
+      - 7878:7878 # Radarr
+      - 8989:8989 # Sonarr
+      # - 8096:8096 # Jellyfin
+      # - 32400:32400 # Plex
+      # - 9117:9117 # Jackett
+    volumes:
+      - /home/kaalu/volumes/arr/gluetun:/gluetun
+    environment:
+      # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - VPN_TYPE=openvpn
+      # OpenVPN:
+      - OPENVPN_USER=sLxYFRdFiJyFHEcsTaHmHvVS
+      - OPENVPN_PASSWORD=JbMBRQU8aQvPTz46J9PyiHA1
+      # Wireguard:
+      # - WIREGUARD_PRIVATE_KEY=<YOUR_PRIVATE_KEY> # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/providers/nordvpn.md#obtain-your-wireguard-private-key
+      # - WIREGUARD_ADDRESSES=10.5.0.2/32
+      - SERVER_COUNTRIES=Switzerland,Spain,Poland
+      # Timezone for accurate log times
+      - TZ=Eire
+      # Server list updater
+      # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
+      - UPDATER_PERIOD=24h
+  
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    volumes:
+      - /home/kaalu/volumes/arr/qbittorrent/appdata:/config
+      - /home/kaalu/downloads:/downloads
+    # depends_on:
+    #   - gluetun
+    restart: unless-stopped
+  
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/prowlarr:/config
+    restart: unless-stopped
+
+  # requestrr:
+  #   image: thomst08/requestrr
+  #   # hostname: requestrr
+  #   container_name: requestrr
+  #   network_mode: "service:gluetun"
+  #   volumes:
+  #   - /home/kaalu/volumes/arr/requesterr/config:/root/config
+  #   restart: unless-stopped
+    
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    network_mode: "service:gluetun"
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/overseerr/config:/app/config
+      - /home/kaalu/downloads:/media
+    restart: unless-stopped
+
+  # flaresolverr:
+  #   # DockerHub mirror flaresolverr/flaresolverr:latest
+  #   image: ghcr.io/flaresolverr/flaresolverr:latest
+  #   container_name: flaresolverr
+  #   environment:
+  #     - LOG_LEVEL=${LOG_LEVEL:-info}
+  #     - LOG_HTML=${LOG_HTML:-false}
+  #     - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+  #     - TZ=Eire
+  #   network_mode: "service:gluetun"
+  #   restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/lidarr/config:/config
+      - /home/kaalu/downloads/music:/music #optional
+      - /home/kaalu/downloads:/downloads #optional
+    restart: unless-stopped
+    
+  mylar3:
+    image: lscr.io/linuxserver/mylar3:latest
+    container_name: mylar3
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/mylar3:/config
+      - /home/kaalu/downloads/manga:/comics
+      - /home/kaalu/downloads:/downloads
+    restart: unless-stopped
+    
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/bazarr/config:/config
+      - /home/kaalu/downloads/movie:/movies #optional
+      - /home/kaalu/downloads/tv:/tv #optional
+     
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/radarr/data:/config
+      - /home/kaalu/downloads/movie:/movies #optional
+      - /home/kaalu/downloads:/downloads #optional
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/arr/sonarr/data:/config
+      - /home/kaalu/downloads/tv:/tv #optional
+      - /home/kaalu/downloads:/downloads #optional
+    restart: unless-stopped
+
+  # jellyfin:
+  #   image: jellyfin/jellyfin
+  #   container_name: jellyfin
+  #   user: 1000:1000
+  #   # network_mode: 'host'
+  #   network_mode: "service:gluetun"
+  #   volumes:
+  #     - /home/kaalu/volumes/jellyfin/config:/config
+  #     - /home/kaalu/volumes/jellyfin/cache:/cache
+  #     - /home/kaalu/downloads:/media
+  #     - type: bind
+  #       source: /home/kaalu/downloads/movie
+  #       target: /movie
+  #     - type: bind
+  #       source: /home/kaalu/downloads/tv
+  #       target: /tv
+  #       # read_only: true
+  #     - type: bind
+  #       source: /home/kaalu/downloads/
+  #       target: /downloads
+  #       # read_only: true
+  #     # # Optional - extra fonts to be used during transcoding with subtitle burn-in
+  #     # - type: bind
+  #     #   source: /path/to/fonts
+  #     #   target: /usr/local/share/fonts/custom
+  #     #   read_only: true
+  #   restart: 'unless-stopped'
+  #   # Optional - alternative address used for autodiscovery
+  #   environment:
+  #     - JELLYFIN_PublishedServerUrl=https://jellyfin.arnavbhattacharya.com
+  #   # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+  #   extra_hosts:
+  #     - 'host.docker.internal:host-gateway'
+    
+  # plex:
+  #   image: lscr.io/linuxserver/plex:latest
+  #   container_name: plex
+  #   network_mode: "service:gluetun"
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Eire
+  #     - VERSION=docker
+  #     - PLEX_CLAIM= #optional
+  #   volumes:
+  #     - /home/kaalu/volumes/plex:/config
+  #     - /home/kaalu/downloads/tv:/tv
+  #     - /home/kaalu/downloads/movie:/movies
+  #   restart: unless-stopped
+
+  # doplarr:
+  #   environment:
+  #     - SONARR__URL=http://192.168.1.100:8989
+  #     - RADARR__URL=http://192.168.1.100:7878
+  #     - OVERSEERR__URL=http://192.168.1.100:5055
+  #     - SONARR__API=bedc17cea14e4ccaadef5feaa4ba4675
+  #     - RADARR__API=bc4b4d227b63495482ac8d3955888f8c
+  #     - OVERSEERR__API=MTc0MTQ1OTE2NjkwN2E1OTIyNzgwLWU1YjctNDJjMS1hNDA0LWIyNzFiNDA1YjNkOQ==
+  #     - DISCORD__TOKEN=MTM0ODAyNjA3MzMyOTE3NjczNw.GM_3hJ.TpL-CjBMtK-A_NRqpk5SVBI1iEpA93pt6AFgV4
+  #     - DISCORD__REQUESTED_MSG_STYLE=:embed
+  #     - SONARR__SEASON_FOLDERS=true
+  #     - OVERSEERR__DEFAULT_ID=1
+  #   container_name: doplarr
+  #   image: "ghcr.io/kiranshila/doplarr:latest"
+  #   restart: unless-stopped
+  #   network_mode: "service:gluetun"
+    

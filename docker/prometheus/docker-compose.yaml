@@ -1,0 +1,22 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    ports:
+      - 9898:9090
+    user: '1000:1000'
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - /home/kaalu/volumes/prometheus/prom_data:/prometheus
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+    
+volumes:
+  prom_data:

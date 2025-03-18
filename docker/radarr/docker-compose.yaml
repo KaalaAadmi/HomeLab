@@ -1,0 +1,21 @@
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Eire
+    volumes:
+      - /home/kaalu/volumes/radarr/data:/config
+      - /home/kaalu/downloads/movie:/movies #optional
+      - /home/kaalu/downloads:/downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

@@ -1,0 +1,24 @@
+---
+services:
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    env_file:
+      - .env
+    environment:
+      PUID: ${PUID} #optional
+      PGID: ${PGID} #optional
+      TZ: ${TIMEZONE} #optional
+      SUBDOMAINS: ${SUBDOMAINS}
+      TOKEN: ${TOKEN}
+      UPDATE_IP: ${UPDATE_IP:-true} # Defaults to true if not set
+      LOG_FILE: ${LOG_FILE:-true} # Defaults to true if not set
+    volumes:
+      - /home/kaalu/volumes/duckdns/config:/config #optional
+    restart: unless-stopped
+    networks:
+      - homelab  # Use a defined network instead of network_mode
+
+networks:
+  homelab:
+    external: true

@@ -1,0 +1,3 @@
+DIRECT LOGIN LINK OF NEXTCLOUD: https://cloud.arnavbhattacharya.com/login?direct=1
+
+LOCATION OF CONFIG.PHP FOR NEXTCLOUD: /volumes/nextcloud/config/www/nextcloud/config

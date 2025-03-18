@@ -1,0 +1,26 @@
+{
+    admin 0.0.0.0:2019
+}
+
+*.arnavbhattacharya.com {
+  tls {
+        dns cloudflare {env.CF_API_TOKEN}
+        propagation_delay 1m
+        resolvers 1.1.1.1
+        }
+  
+  @portainer host portainer.arnavbhattacharya.com
+  handle @portainer {
+    reverse_proxy https://192.168.1.100:9443 {
+      transport http {
+        tls
+        tls_insecure_skip_verify
+      }
+    }
+  
+  @glance host glance.arnavbhattacharya.com
+  handle @glance {
+    reverse_proxy http://192.168.1.100:8081
+  }
+  }
+}

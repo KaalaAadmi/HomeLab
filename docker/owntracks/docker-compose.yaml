@@ -1,0 +1,18 @@
+services:
+  otrecorder:
+    image: owntracks/recorder
+    ports:
+      - 8083:8083
+    volumes:
+      - /home/kaalu/volumes/owntracks/config:/config
+      - /home/kaalu/volumes/owntracks/store:/store
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    environment:
+      - OTR_PORT=0
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

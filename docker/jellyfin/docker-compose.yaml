@@ -1,0 +1,37 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: 1000:1000
+    # network_mode: 'host'
+    volumes:
+      - /home/kaalu/volumes/jellyfin/config:/config
+      - /home/kaalu/volumes/jellyfin/cache:/cache
+      - /home/kaalu/downloads:/media
+      - type: bind
+        source: /home/kaalu/downloads/movie
+        target: /media
+      - type: bind
+        source: /home/kaalu/downloads/tv
+        target: /media2
+        read_only: true
+      # # Optional - extra fonts to be used during transcoding with subtitle burn-in
+      # - type: bind
+      #   source: /path/to/fonts
+      #   target: /usr/local/share/fonts/custom
+      #   read_only: true
+    ports:
+      - 8096:8096
+    restart: 'unless-stopped'
+    # Optional - alternative address used for autodiscovery
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://example.com
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

@@ -1,0 +1,51 @@
+services:
+    db:
+            image: postgres:17
+            restart: always
+            environment:
+                - POSTGRES_DB=speedtest_tracker
+                - POSTGRES_USER=speedtest_tracker
+                - POSTGRES_PASSWORD=password
+            volumes:
+                - /home/kaalu/volumes/speedtest-tracker/speedtest-db:/var/lib/postgresql/data
+            healthcheck:
+                test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+                interval: 5s
+                retries: 5
+                timeout: 5s
+    speedtest-tracker:
+        image: lscr.io/linuxserver/speedtest-tracker:latest
+        restart: unless-stopped
+        container_name: speedtest-tracker
+        ports:
+            - 8070:80
+            - 8443:443
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - APP_KEY=base64:995C7tU03onJ3gkmmDgahpVqc/gZi/Dm2vJ6Jw6Ku00=
+            - APP_TIMEZONE=Eire
+            - DISPLAY_TIMEZONE=Eire
+            - SPEEDTEST_SCHEDULE=*/45 * * * *
+            - ADMIN_EMAIL=sidehustyle13@gmail.com
+            - ADMIN_PASSWORD=HelloWorld@123
+            - DB_CONNECTION=pgsql
+            - DB_HOST=db
+            - DB_PORT=5432
+            - DB_DATABASE=speedtest_tracker
+            - DB_USERNAME=speedtest_tracker
+            - DB_PASSWORD=password
+        volumes:
+            - /home/kaalu/volumes/speedtest-tracker/config:/config
+            - /home/kaalu/volumes/speedtest-tracker/ssl-keys:/config/keys
+        depends_on:
+            - db
+        networks:
+            - homelab
+
+networks:
+  homelab:
+    external: true
+    
+volumes:
+  speedtest-db:

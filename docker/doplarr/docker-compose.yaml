@@ -1,0 +1,22 @@
+services:
+  doplarr:
+    environment:
+      - SONARR__URL=http://192.168.1.100:8989
+      - RADARR__URL=http://192.168.1.100:7878
+      - OVERSEERR__URL=http://192.168.1.100:5055
+      - SONARR__API=bedc17cea14e4ccaadef5feaa4ba4675
+      - RADARR__API=bc4b4d227b63495482ac8d3955888f8c
+      - OVERSEERR__API=MTc0MTQ1OTE2NjkwN2E1OTIyNzgwLWU1YjctNDJjMS1hNDA0LWIyNzFiNDA1YjNkOQ==
+      - DISCORD__TOKEN=MTM0ODAyNjA3MzMyOTE3NjczNw.GM_3hJ.TpL-CjBMtK-A_NRqpk5SVBI1iEpA93pt6AFgV4
+      - DISCORD__REQUESTED_MSG_STYLE=:embed
+      - SONARR__SEASON_FOLDERS=true
+      - OVERSEERR__DEFAULT_ID=1
+    container_name: doplarr
+    image: "ghcr.io/kiranshila/doplarr:latest"
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

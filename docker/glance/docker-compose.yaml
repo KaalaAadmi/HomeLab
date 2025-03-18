@@ -1,0 +1,35 @@
+services:
+  glance:
+    container_name: glance
+    image: glanceapp/glance
+    volumes:
+      - ./config:/app/config
+      - ./assets:/app/assets
+      # Optionally, also mount docker socket if you want to use the docker containers widget
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt:/mnt:ro
+      - /etc/timezone:/etc/timezone:ro            # Ensures container timezone sync.
+      - /etc/localtime:/etc/localtime:ro          # Ensures container localtime sync.
+    ports:
+      - 8081:8080
+    env_file: .env
+    labels:
+      glance.name: Glance
+      glance.icon: di:glance-light
+      # glance.url: https://glance.domain.com
+      glance.description: Dashboard for self-hosted services
+      glance.id: glance
+      glance.hide: false
+    restart: unless-stopped                       # Restarts container unless manually stopped.
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true
+
+# Skip if you dont use swag proxy
+# networks:
+#   default:
+#     external:
+#       name: swag_default
