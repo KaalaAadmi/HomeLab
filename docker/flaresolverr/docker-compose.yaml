@@ -13,6 +13,12 @@ services:
     restart: unless-stopped
     networks:
       - homelab
+    labels:
+      glance.name: Flaresolverr
+      glance.icon: di:flaresolverr
+      glance.url: http://192.168.1.100:8191
+      glance.description: Captcha Solver
+      glance.id: flaresolverr
 
 networks:
   homelab:

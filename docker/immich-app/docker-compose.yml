@@ -32,6 +32,12 @@ services:
       disable: false
     networks:
       - homelab
+    labels:
+      glance.name: Immich
+      glance.icon: si:immich
+      glance.url: https://immich.arnavbhattacharya.com
+      glance.description: Image & video management
+      glance.id: immich
 
   immich-machine-learning:
     container_name: immich_machine_learning
@@ -50,6 +56,9 @@ services:
       disable: false
     networks:
       - homelab
+    labels:
+      glance.parent: immich
+      glance.name: Machine Learning
 
   redis:
     container_name: immich_redis
@@ -59,6 +68,9 @@ services:
     restart: always
     networks:
       - homelab
+    labels:
+      glance.parent: immich
+      glance.name: Redis
 
   database:
     container_name: immich_postgres
@@ -92,6 +104,9 @@ services:
     restart: always
     networks:
       - homelab
+    labels:
+      glance.parent: immich
+      glance.name: Postgres
 
 networks:
   homelab:

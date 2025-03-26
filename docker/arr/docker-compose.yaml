@@ -44,6 +44,12 @@ services:
       # Server list updater
       # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
       - UPDATER_PERIOD=24h
+    labels:
+      glance.name: Gluetun
+      glance.icon: di:gluetun
+      # glance.url: 
+      glance.description: VPN
+      glance.id: gluetun
   
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -61,6 +67,12 @@ services:
     # depends_on:
     #   - gluetun
     restart: unless-stopped
+    labels:
+      glance.name: qBittorrent
+      glance.icon: si:qbittorrent
+      glance.url: http://192.168.1.100:8080
+      glance.description: Torrent Downloader
+      glance.id: qbittorrent
   
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -73,6 +85,12 @@ services:
     volumes:
       - /home/kaalu/volumes/arr/prowlarr:/config
     restart: unless-stopped
+    labels:
+      glance.name: Prowlarr
+      glance.icon: di:prowlarr
+      glance.url: http://192.168.1.100:9696
+      glance.description: Torrent Indexer
+      glance.id: prowlarr
 
   # requestrr:
   #   image: thomst08/requestrr
@@ -94,6 +112,12 @@ services:
       - /home/kaalu/volumes/arr/overseerr/config:/app/config
       - /home/kaalu/downloads:/media
     restart: unless-stopped
+    labels:
+      glance.name: Overseerr
+      glance.icon: di:overseerr
+      glance.url: http://192.168.1.100:5055
+      glance.description: Sevarr Dashboard
+      glance.id: overseerr
 
   # flaresolverr:
   #   # DockerHub mirror flaresolverr/flaresolverr:latest
@@ -120,6 +144,12 @@ services:
       - /home/kaalu/downloads/music:/music #optional
       - /home/kaalu/downloads:/downloads #optional
     restart: unless-stopped
+    labels:
+      glance.name: Lidarr
+      glance.icon: di:lidarr
+      glance.url: http://192.168.1.100:8686
+      glance.description: Music Downloader
+      glance.id: lidarr
     
   mylar3:
     image: lscr.io/linuxserver/mylar3:latest
@@ -134,6 +164,12 @@ services:
       - /home/kaalu/downloads/manga:/comics
       - /home/kaalu/downloads:/downloads
     restart: unless-stopped
+    labels:
+      glance.name: Mylar
+      glance.icon: ./mylar.png
+      glance.url: http://192.168.1.100:8090
+      glance.description: Manga Downloader
+      glance.id: mylar
     
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
@@ -147,6 +183,13 @@ services:
       - /home/kaalu/volumes/arr/bazarr/config:/config
       - /home/kaalu/downloads/movie:/movies #optional
       - /home/kaalu/downloads/tv:/tv #optional
+    restart: unless-stopped
+    labels:
+      glance.name: Bazarr
+      glance.icon: di:bazarr
+      glance.url: http://192.168.1.100:6767
+      glance.description: Caption Downloader
+      glance.id: bazarr
      
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -161,6 +204,12 @@ services:
       - /home/kaalu/downloads/movie:/movies #optional
       - /home/kaalu/downloads:/downloads #optional
     restart: unless-stopped
+    labels:
+      glance.name: Radarr
+      glance.icon: di:radarr
+      glance.url: http://192.168.1.100:7878
+      glance.description: Movie Downloader
+      glance.id: radarr
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -175,6 +224,12 @@ services:
       - /home/kaalu/downloads/tv:/tv #optional
       - /home/kaalu/downloads:/downloads #optional
     restart: unless-stopped
+    labels:
+      glance.name: Sonarr
+      glance.icon: di:sonarr
+      glance.url: http://192.168.1.100:8989
+      glance.description: TV Show Downloader
+      glance.id: sonarr
 
   # jellyfin:
   #   image: jellyfin/jellyfin
@@ -234,7 +289,7 @@ services:
   #     - SONARR__API=bedc17cea14e4ccaadef5feaa4ba4675
   #     - RADARR__API=bc4b4d227b63495482ac8d3955888f8c
   #     - OVERSEERR__API=MTc0MTQ1OTE2NjkwN2E1OTIyNzgwLWU1YjctNDJjMS1hNDA0LWIyNzFiNDA1YjNkOQ==
-  #     - DISCORD__TOKEN=MTM0ODAyNjA3MzMyOTE3NjczNw.GM_3hJ.TpL-CjBMtK-A_NRqpk5SVBI1iEpA93pt6AFgV4
+  #     - DISCORD__TOKEN=MTM0ODAyNjA3MzMyOTE3NjczNw.GxfvtA.ActEU0ITE4n719ojiBnJfEfvm-H80y2_hVsraU
   #     - DISCORD__REQUESTED_MSG_STYLE=:embed
   #     - SONARR__SEASON_FOLDERS=true
   #     - OVERSEERR__DEFAULT_ID=1

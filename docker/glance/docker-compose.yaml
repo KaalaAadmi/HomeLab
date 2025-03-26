@@ -3,8 +3,8 @@ services:
     container_name: glance
     image: glanceapp/glance
     volumes:
-      - ./config:/app/config
-      - ./assets:/app/assets
+      - ${PWD}/config:/app/config
+      - ${PWD}/assets:/app/assets
       # Optionally, also mount docker socket if you want to use the docker containers widget
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /mnt:/mnt:ro

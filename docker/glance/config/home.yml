@@ -243,17 +243,23 @@
               # - title: Emby
               #   url: https://emby.domain.com
               #   icon: di:emby
+              - title: Authentik
+                url: https://192.168.1.100:5678/
+                icon: di:authentik
               - title: Immich
                 url: http://192.168.1.100:2283
                 icon: di:immich
-              - title: StirlingPDF
-                url: https://pdf.domain.com/
-                icon: di:stirling-pdf  
+              # - title: StirlingPDF
+              #   url: https://pdf.domain.com/
+              #   icon: di:stirling-pdf 
+              - title: Next Cloud
+                url: http://192.168.1.100:9875
+                icon: di:nextcloud
               - title: Owntracks
                 url: http://192.168.1.100:8083
                 icon: di:owntracks
               - title: Portainer
-                url: http://192.168.1.100:9443
+                url: https://192.168.1.100:9443
                 icon: di:portainer
               - title: Dashdot
                 url: http://192.168.1.100:8100
